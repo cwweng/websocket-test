@@ -11,12 +11,15 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.Set;
 
-@Component
 public class SimpleWebSocketHandler extends TextWebSocketHandler {
     private static final Logger logger = LoggerFactory.getLogger(SimpleWebSocketHandler.class);
 
-    @Autowired
     private Set<WebSocketSession> wsSessions;
+
+    public SimpleWebSocketHandler(Set<WebSocketSession> wsSessions) {
+
+        this.wsSessions = wsSessions;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -27,11 +30,11 @@ public class SimpleWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String content = message.getPayload();
+        final String content = message.getPayload();
 
         logger.info("{} received {}", session.getId(), content);
 
-        wsSessions.stream().forEach(ws -> {
+        wsSessions.forEach(ws -> {
             try {
                 ws.sendMessage(new TextMessage(content));
             } catch (IOException e) {

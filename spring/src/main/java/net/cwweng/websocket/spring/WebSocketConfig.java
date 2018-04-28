@@ -1,7 +1,5 @@
 package net.cwweng.websocket.spring;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -15,16 +13,16 @@ import java.util.Set;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Autowired
-    private SimpleWebSocketHandler simpleWebSocketHandler;
-
-    @Bean
     public Set<WebSocketSession> wsSessions() {
         return new HashSet<>();
     }
 
+    public SimpleWebSocketHandler simpleWebSocketHandler() {
+        return new SimpleWebSocketHandler(wsSessions());
+    }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(simpleWebSocketHandler, "/ws").setAllowedOrigins("*");
+        registry.addHandler(simpleWebSocketHandler(), "/ws").setAllowedOrigins("*");
     }
 }
