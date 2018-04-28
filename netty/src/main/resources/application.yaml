@@ -1,0 +1,3 @@
+ws:
+  port: 8080
+  path: /ws
